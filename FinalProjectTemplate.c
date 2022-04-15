@@ -37,3 +37,24 @@ int main(){
 ///////////////////////////////////////
 //User Defined Functions' Definition//
 /////////////////////////////////////
+
+
+//I will edit this up a bit to make it work, this is copy pasted from lab 9
+int read_words(char* WL[MAXWORDS], char* file_name) {
+	int numread = 0;
+	char line[WORDLENGTH];
+	char *p;
+	FILE* fp = fopen(file_name, "r");
+	while (!feof(fp)) {
+		p = fgets(line, WORDLENGTH, fp);
+		if (p != NULL) 
+		{
+			trimws(line);
+			WL[numread] = (char *)malloc(strlen(line) + 1);
+			strcpy(WL[numread], line);
+			numread++;
+		}
+	}
+	fclose(fp);
+	return numread;
+}
