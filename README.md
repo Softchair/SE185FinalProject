@@ -6,7 +6,8 @@ Words will appear in a box and the player will need to type the words before the
 bottom of the box or the game will end.
 
 Code Requirements:
-● Use of the provided text file (on Canvas) to produce the words that are used in the game.
+
+● Use of the provided text file (on Canvas) to produce the words that are used in the game. 
   ○ The words that are used in the game should be randomly chosen and different 
   for each instance of the game.
 ● Use of a 2D array for the playing board to keep track of the position of the words.
