@@ -33,7 +33,7 @@ int main(){
 	printf("Would you like to play or add a word?/n");
 	printf("You currently have 58 words that can be used. (p/w)");
 	scanf("%c", &response);
-	//if they say do want to endter a word:
+	//if they do want to enter a word:
 	printf("What would you like you minimum word length to be?");
 	scanf("%d", &minmumLength);
 	//go into conditional that adds a word if they choose to add a word
