@@ -9,26 +9,47 @@ Team member 4 Camden Fergen | "Percentage of Contribution to The Project"
 */
 
 ////////////////////
-#include<stdio.h>
+#include <ctype.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <ncurses/ncurses.h>
+#include <unistd.h>
 #include<stdlib.h>
+#include<string.h>
 
 //add more here////
+#define COLUMNS 70
+#define ROWS 71
+#define EMPTY_SPACE ' '
+#define FLOOR '-'
+#define WALL '|'
 
-//////////////////////
-//Struct Definition//
-////////////////////
+//2D character array which the maze is mapped into 
+char BOARD[COLUMNS][ROWS];
+
+//Struct Definition
+
 
 
 /////////////////////////////////////
 //User Defined Functions Prototype//
 //List prototypes here and define//
-//tehm below the main function////
+//them below the main function////
 /////////////////////////////////
+//Function draws the characters on the board
+void draw_board(void);
+
+//Draws character use to the screen at position x,y 
+void draw_character(int x, int y, char use);
+//Determines which spots on the board should have a character '-' or '|'
+void generate_board();
+
 
 int main(){
 	
 	char response;
-	int minimumLength;
+	int minmumLength;
 	printf("Hello, this is a typing game. You will need to type the words as they appear/n");
 	printf("Would you like to play or add a word?/n");
 	printf("You currently have 58 words that can be used. (p/w)");
@@ -66,3 +87,36 @@ int read_words(char* WL[MAXWORDS], char* file_name) {
 	fclose(fp);
 	return numread;
 }
+
+void draw_board(void){
+	for(int i = 0; i< COLUMNS;++i){
+		for(int j= 0; j< ROWS; ++j){
+		draw_character(i,j,BOARD[i][j]);	
+		}
+	}
+}
+
+void draw_character(int x, int y, char use)
+{
+    mvaddch(y,x,use);
+    refresh();
+}
+
+
+void generate_board(){
+		for(int i = 0; i< COLUMNS;++i){
+			for(int j= 0; j< ROWS; ++j){
+					//causes the board to have FLOOR on the top and bottom
+					if( i == 0 || i == 70){
+				BOARD[i][j] = FLOOR;
+			}//causes the board to have WALL on the top and bottom
+			else if (j == 0 || j == 70 || j == 71){
+				BOARD[i][j] = WALL;
+			}
+		}
+
+	}
+	
+}
+
+//Paste in the function from lab 9 that stores the values of each word so that the words can each be removed
