@@ -13,13 +13,12 @@ Team member 4 Camden Fergen | "Percentage of Contribution to The Project"
 #include <string.h>
 #include <ncurses/ncurses.h>
 #include <unistd.h>
-#include<stdlib.h>
-#include<string.h>
+#include <time.h>
 ////////////////////
 
 /* Constant variables */
 #define COLUMNS 50
-#define ROWS 50
+#define ROWS 30
 #define FLOOR '_'
 #define WALL '|'
 #define EMPTY_SPACE ' '
@@ -28,22 +27,47 @@ Team member 4 Camden Fergen | "Percentage of Contribution to The Project"
 /////////////////////////////////
 /* Function initialization */
 
+/* Function to hold the game running
+   Use getstr(userWord) to get input from user */
+int game();
+
+/* Prints a word to the screen if it hasnt been printed before */
+void newPrintToScreen(char* word, int *wordsOnScreen);
+
+/* Updates the location of words on the screen 
+   Also increments them all down by num seconds
+   passed since last call */
+void updateLoc(int secsPast, int wordsOnScreen);
+
+/*removes a word from the screen */
+void removeWord(int arrayLoc);
+
+/* Finds the lowest word and returns an int */
+int lowestWord(int wordsOnScreen);
+
+/* Clears the typing space so its empty */
+void clearTypingSpace();
+
 /* Iterates over a file to read all the words from
    it and then returns the num of words avalible to use */
 int readWords(char* fileName, int minLength);
-
-/* Iterates over the BOARD[][] variable and then
-   uses drawChar to print it to the screen */
-void drawBoard(void);
 
 /* This function draws a character to the screen
    Using x and y */
 void drawChar(int x, int y, char use);
 
+/* Trims the whitespace of a string */
+void trimws(char* str);
+
+/* Iterates over the BOARD[][] variable and then
+   uses drawChar to print it to the screen */
+void drawBoard(void);
+
 /* Generates an empty board to print to the screen
    using WALL, FLOOR, and EMPTY_SPACE assigned to
    the BOARD[][] variable */
 void generateBoard();
+
 
 /* End function initialization */
 /////////////////////////////////
@@ -61,13 +85,16 @@ typedef struct {
 /* Variable for the game board */
 char BOARD[ROWS][COLUMNS];
 
-/* Varible of game words */
+/* Varible for avalible words based on length */
 //Fun fact, there are 1000 words in the word list already...
-wordStruct gameWords[2000];
+char wordsToUse[2000][WORDLENGTH];
+
+/* Varible of words on screen */
+wordStruct gameWords[30];
 
 /* Varible to hold number of words */
-int numWords = 0;
-int numGameWords = 0;
+int numWords = 0; //For total words
+int numGameWords = 0; //For words that can be used
 
 /* End global variables */
 /////////////////////////////////
@@ -103,14 +130,6 @@ int main() {
 	fclose(fp);
 
 	/* End game setup */
-	
-
-	//Generate board, move later
-    // initscr();
-    // refresh();
-	// generate_board();
-	// draw_board();
-	// refresh();
 
 	//Variable to hold user response
 	char response;
@@ -164,19 +183,183 @@ int main() {
 		return 0;
 	}
 
-	for(int i = 0; i < numGameWords; i++) {
-		printf("%s\n", gameWords[i].word);
-	}
+	// for(int i = 0; i < numGameWords; i++) {
+	// 	printf("%s", wordsToUse[i]);
+	// }
+
+	int score = game();
+
+	printf("You made it %d seconds! Congrats", score);
 
 	//Cleanup board
 	endwin();
 	return 0;
 }
 
-//////////////////////////////////////
-//User Defined Functions' Definition//
-//////////////////////////////////////
+////////////////////////////////
+/* Functions to play the game */
+////////////////////////////////
 
+/* Function to hold the game running
+   Use getstr() to get input from user 
+   or use getUserInput */
+int game() {
+	/* Setup for board */
+	//Sets up ncurses board
+    initscr();
+    refresh();
+
+	//Generates and draws board
+	generateBoard();
+	drawBoard();
+	refresh();
+	/* End setup for board */
+
+	/* Random setup */
+	srand(time(NULL));
+
+	/* Variables for the game */
+	int score = 0; //Score, stored in seconds
+	int numWordsOnScreen = 0; //Number of words on screen
+	char userWord[WORDLENGTH]; //Word typed
+	/* End variables for the game */
+
+	do {
+		//Gets a random num for random word
+		int wordChoice = (rand() % numGameWords);
+		
+		//Variable to hold the newWord to be added
+		char newWord[WORDLENGTH];
+
+		//Copies the random word to newWord, then prints it
+		strcpy(newWord, wordsToUse[wordChoice]);
+		newPrintToScreen(newWord, &numWordsOnScreen);
+
+		//Clears the typing space, then gets user input
+		clearTypingSpace();
+		mvprintw(ROWS + 2, 0, "Type here: ");
+		getstr(userWord);
+
+		//TODO: ERROR, ONLY MOVES IT DOWN ONCE THEN DELETES THE WORD
+		updateLoc(2, numWordsOnScreen);
+
+		//getuser input with getstr, keep track of time it takes
+		//update location of word(s), add new words if needed with newPrintToScreen
+		//finish the while if a word hits the bottom of the screen
+		
+	} while (1);
+	//TODO Fix function, goes out of bounds
+	//} while(lowestWord(numWordsOnScreen) < ROWS - 1);
+
+
+	//////////////////////////////////
+	/* EXAMPLES FOR USING THIS CODE */
+	//////////////////////////////////
+
+	//Exmaple of printing a new word to the screen
+	// newPrintToScreen("test", &numWordsOnScreen);
+
+	//Example of getting user input
+	// mvprintw(ROWS + 2, 0, "Type here: ");
+	// getstr(userWord);
+
+	//Moving words down
+	// updateLoc(2, numWordsOnScreen);
+
+	//Example of getting user input
+	// clearTypingSpace();
+	// mvprintw(ROWS + 2, 0, "Type here: ");
+	// getstr(userWord);
+	/* Make sure to call clear typing space and then
+	   have a mvprintw before the getstr otherwise 
+	   the typing location is wrong */
+
+	//////////////////////////////////
+	/* EXAMPLES FOR USING THIS CODE */
+	//////////////////////////////////
+
+	endwin();
+	return score;
+}
+
+/* Prints a word to the screen if it hasnt been printed before */
+void newPrintToScreen(char* word, int *wordsOnScreen) {
+
+	//HEADS UP FOR THIS FUNCTION, need to check if a word is already in the spot
+
+	wordStruct tempWord;
+	srand(time(NULL));
+
+	//int col = ((rand() % COLUMNS) + 1) - strlen(word);
+	int col = (rand() % COLUMNS) + 1;
+
+	mvprintw(1, col, "%s", word);
+
+	//Initialize word struct
+	strncpy(tempWord.word, word, 20);
+	tempWord.col = col;
+	tempWord.row = 1;
+
+	//Adds the struct to array of words on screen
+	int val = *wordsOnScreen;
+	gameWords[val] = tempWord;
+
+	wordsOnScreen++;
+}
+
+/* Updates the location of words on the screen 
+   Also increments them all down by num seconds
+   passed since last call */
+void updateLoc(int secsPast, int wordsOnScreen) {
+	//Calls draw board to clear the space
+	drawBoard();
+
+	for(int i = 0; i <= wordsOnScreen; i++) {
+		//Updates to new location
+		gameWords[i].row = gameWords[i].row + secsPast;
+
+		//Printing of word
+		mvprintw(gameWords[i].row, gameWords[i].col, "%s", gameWords[i].word);
+	}
+}
+
+/*removes a word from the screen */
+void removeWord(int arrayLoc) {
+	
+}
+
+/* Finds the lowest word and returns an int */
+int lowestWord(int wordsOnScreen) {
+	//Base case
+	if(wordsOnScreen == 1) {
+		return gameWords[0].row;
+	}
+
+	int lowest = gameWords[0].row;
+
+	//Iterates over remaining words on screen
+	for(int i = 1; i < wordsOnScreen; i++) {
+		int temp = gameWords[i].row;
+
+		//If the new word is lower, assign the lowest to temp
+		if(temp > lowest) {
+			lowest = temp;
+		}
+	}
+
+	return lowest;
+}
+
+/* Clears the typing space so its empty */
+void clearTypingSpace() {
+	for(int i = 0; i < COLUMNS; i++) {
+		mvprintw(ROWS + 2, i, " ");
+	}
+}
+
+////////////////////
+/* Misc functions */
+////////////////////
 
 /* Iterates over a file to read all the words from
    it and then returns the num of words in file */
@@ -203,15 +386,11 @@ int readWords(char* fileName, int minLength) {
 		//If there is a word
 		//Note, its minLength + 1 to account for null char and new line
 		if (p != NULL && strlen(p) > minLength + 1) {
-			//trimws(line); This was a function from lab 9? didnt add it here yet
+			trimws(line);
 
-			wordStruct tempWord;
+			//Copies data over to array of words to use
+			strncpy(wordsToUse[numread], line, 20);
 
-			//Copies data over to temp word to be added to array
-			strncpy(tempWord.word, line, 20);
-			tempWord.row = 0; tempWord.col = 0;
-
-			gameWords[numread] = tempWord;
 			numread++;
 		}
 	}
@@ -226,6 +405,18 @@ int readWords(char* fileName, int minLength) {
 void drawChar(int x, int y, char use) {
     mvaddch(x, y, use);
     refresh();
+}
+
+/* Trims the whitespace of a string */
+void trimws(char* str) {
+	int length = strlen(str);
+	int x;
+	if (length == 0) return;
+	x = length - 1;
+	while (isspace(str[x]) && (x >= 0)) {
+		str[x] = '\0';
+		x -= 1;
+	}
 }
 
 ///////////////////////////////////////////////////////
