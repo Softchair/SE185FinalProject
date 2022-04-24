@@ -66,6 +66,8 @@ void drawBoard(void);
    the BOARD[][] variable */
 void generateBoard();
 
+/*This function converts milliseconds into seconds*/
+int seconds (int t);
 
 /* End function initialization */
 /////////////////////////////////
@@ -459,4 +461,10 @@ void generateBoard() {
 		}
 	//end for
 	}
+}
+
+/*This function converts milliseconds into seconds*/
+int seconds (int t){
+	int sec = (t-((t/1000)/60*60))/1000;
+	return sec;
 }
