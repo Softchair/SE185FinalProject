@@ -180,8 +180,6 @@ int main() {
 
 /* Iterates over a file to read all the words from
    it and then returns the num of words in file */
-
-//RE DO THIS TO ONLY SCAN CERTAIN WORDS
 int readWords(char* fileName, int minLength) {
 	int numread = 0;
 	char line[WORDLENGTH];
