@@ -3,7 +3,7 @@ Team xx (please insert your team number instead of xx)
 Team member 1 Kaden Wingert | "Percentage of Contribution to The Project"
 Team member 2 Daniel Karpov | "Percentage of Contribution to The Project"
 Team member 3 Ethan Meyer | "Percentage of Contribution to The Project"
-Team member 4 Camden Fergen | "Percentage of Contribution to The Project"
+Team member 4 Camden Fergen | "90%"
 */
 
 ////////////////////
@@ -89,10 +89,10 @@ char BOARD[ROWS][COLUMNS];
 //Fun fact, there are 1000 words in the word list already...
 char wordsToUse[2000][WORDLENGTH];
 
-/* Varible of words on screen */
+/* Variable of words on screen */
 wordStruct gameWords[30];
 
-/* Varible to hold number of words */
+/* Variable to hold number of words */
 int numWords = 0; //For total words
 int numGameWords = 0; //For words that can be used
 
@@ -229,13 +229,13 @@ int game() {
 
 	do {
 		//Gets a random num for random word
-		int wordChoice = (rand() % numGameWords);
+		int randNum = rand() % numGameWords;
 		
 		//Variable to hold the newWord to be added
 		char newWord[WORDLENGTH];
 
 		//Copies the random word to newWord, then prints it
-		strcpy(newWord, wordsToUse[wordChoice]);
+		strcpy(newWord, wordsToUse[randNum]);
 		newPrintToScreen(newWord, &numWordsOnScreen);
 
 		//Clears the typing space, then gets user input
@@ -243,7 +243,6 @@ int game() {
 		mvprintw(ROWS + 2, 0, "Type here: ");
 		getstr(userWord);
 
-		//TODO: ERROR, ONLY MOVES IT DOWN ONCE THEN DELETES THE WORD
 		updateLoc(timeTaken, numWordsOnScreen);
 
 		//getuser input with getstr, keep track of time it takes
@@ -305,7 +304,7 @@ void newPrintToScreen(char* word, int* wordsOnScreen) {
 	int val = *wordsOnScreen;
 	gameWords[val] = tempWord;
 
-	wordsOnScreen++;
+	*wordsOnScreen = *wordsOnScreen + 1;
 }
 
 /* Updates the location of words on the screen 
@@ -315,16 +314,19 @@ void updateLoc(int secsPast, int wordsOnScreen) {
 	//Calls draw board to clear the space
 	drawBoard();
 
-	for(int i = 0; i <= wordsOnScreen; i++) {
+	for(int i = 0; i < wordsOnScreen; i++) {
 		//Updates to new location
 		gameWords[i].row = gameWords[i].row + secsPast;
+		
+		//Used to test this function, comment out
+		//mvprintw(ROWS + 3 + i, 0, "%d/%d: %s", i, wordsOnScreen, gameWords[i].word);
 
 		//Printing of word
 		mvprintw(gameWords[i].row, gameWords[i].col, "%s", gameWords[i].word);
 	}
 }
 
-/*removes a word from the screen */
+/* Removes a word from the screen */
 void removeWord(int arrayLoc) {
 	
 }
