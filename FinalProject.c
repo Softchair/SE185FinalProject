@@ -67,7 +67,7 @@ void drawBoard(void);
 void generateBoard();
 
 /*This function converts milliseconds into seconds*/
-int seconds (int t);
+int milToSeconds(int t);
 
 /* End function initialization */
 /////////////////////////////////
@@ -241,38 +241,12 @@ int game() {
 
 		updateLoc(timeTaken, numWordsOnScreen);
 
-		//getuser input with getstr, keep track of time it takes
-		//update location of word(s), add new words if needed with newPrintToScreen
-		//finish the while if a word hits the bottom of the screen
-		
+		//TODO
+		//Keep track of time it takes for user to enter word
+		//move words down the x amount
+		//generate x words dependent on how many seconds passed
+
 	} while(lowestWord(numWordsOnScreen) < ROWS);
-
-
-	//////////////////////////////////
-	/* EXAMPLES FOR USING THIS CODE */
-	//////////////////////////////////
-
-	//Exmaple of printing a new word to the screen
-	// newPrintToScreen("test", &numWordsOnScreen);
-
-	//Example of getting user input
-	// mvprintw(ROWS + 2, 0, "Type here: ");
-	// getstr(userWord);
-
-	//Moving words down
-	// updateLoc(2, numWordsOnScreen);
-
-	//Example of getting user input
-	// clearTypingSpace();
-	// mvprintw(ROWS + 2, 0, "Type here: ");
-	// getstr(userWord);
-	/* Make sure to call clear typing space and then
-	   have a mvprintw before the getstr otherwise 
-	   the typing location is wrong */
-
-	//////////////////////////////////
-	/* EXAMPLES FOR USING THIS CODE */
-	//////////////////////////////////
 
 	endwin();
 	return score;
@@ -280,20 +254,18 @@ int game() {
 
 /* Prints a word to the screen if it hasnt been printed before */
 void newPrintToScreen(char* word, int* wordsOnScreen) {
-
-	//HEADS UP FOR THIS FUNCTION, need to check if a word is already in the spot
-
 	wordStruct tempWord;
 	srand(time(NULL));
 
 	int length = strlen(word);
 	int col = (rand() % COLUMNS) + 1;
+
 	//Makes sure that the words are printed within the walls of the board
-	if(col+length >= COLUMNS){
+	if(col + length >= COLUMNS){
 		col -= length+1;
 	}
+
 	mvprintw(1, col, "%s", word);
-	
 
 	//Initialize word struct
 	strncpy(tempWord.word, word, 20);
@@ -363,6 +335,12 @@ void clearTypingSpace() {
 ////////////////////
 /* Misc functions */
 ////////////////////
+
+/*This function converts milliseconds into seconds*/
+int milToSeconds(int t) {
+	int sec = (t-((t/1000)/60*60))/1000;
+	return sec;
+}
 
 /* Iterates over a file to read all the words from
    it and then returns the num of words in file */
@@ -465,10 +443,4 @@ void generateBoard() {
 		}
 	//end for
 	}
-}
-
-/*This function converts milliseconds into seconds*/
-int seconds (int t){
-	int sec = (t-((t/1000)/60*60))/1000;
-	return sec;
 }
