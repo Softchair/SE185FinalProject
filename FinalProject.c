@@ -282,14 +282,18 @@ int game() {
 void newPrintToScreen(char* word, int* wordsOnScreen) {
 
 	//HEADS UP FOR THIS FUNCTION, need to check if a word is already in the spot
-	//TODO, keep word within bounds
 
 	wordStruct tempWord;
 	srand(time(NULL));
 
+	int length = strlen(word);
 	int col = (rand() % COLUMNS) + 1;
-
+	//Makes sure that the words are printed within the walls of the board
+	if(col+length >= COLUMNS){
+		col -= length+1;
+	}
 	mvprintw(1, col, "%s", word);
+	
 
 	//Initialize word struct
 	strncpy(tempWord.word, word, 20);
