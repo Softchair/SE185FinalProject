@@ -32,7 +32,7 @@ Team member 4 Camden Fergen | "Percentage of Contribution to The Project"
 int game();
 
 /* Prints a word to the screen if it hasnt been printed before */
-void newPrintToScreen(char* word, int *wordsOnScreen);
+void newPrintToScreen(char* word, int* wordsOnScreen);
 
 /* Updates the location of words on the screen 
    Also increments them all down by num seconds
@@ -224,6 +224,8 @@ int game() {
 	char userWord[WORDLENGTH]; //Word typed
 	/* End variables for the game */
 
+	//newPrintToScreen("test", &numWordsOnScreen);
+
 	do {
 		//Gets a random num for random word
 		int wordChoice = (rand() % numGameWords);
@@ -247,9 +249,7 @@ int game() {
 		//update location of word(s), add new words if needed with newPrintToScreen
 		//finish the while if a word hits the bottom of the screen
 		
-	} while (1);
-	//TODO Fix function, goes out of bounds
-	//} while(lowestWord(numWordsOnScreen) < ROWS - 1);
+	} while(lowestWord(numWordsOnScreen) < ROWS);
 
 
 	//////////////////////////////////
@@ -283,14 +283,14 @@ int game() {
 }
 
 /* Prints a word to the screen if it hasnt been printed before */
-void newPrintToScreen(char* word, int *wordsOnScreen) {
+void newPrintToScreen(char* word, int* wordsOnScreen) {
 
 	//HEADS UP FOR THIS FUNCTION, need to check if a word is already in the spot
+	//TODO, keep word within bounds
 
 	wordStruct tempWord;
 	srand(time(NULL));
 
-	//int col = ((rand() % COLUMNS) + 1) - strlen(word);
 	int col = (rand() % COLUMNS) + 1;
 
 	mvprintw(1, col, "%s", word);
@@ -317,6 +317,8 @@ void updateLoc(int secsPast, int wordsOnScreen) {
 	for(int i = 0; i <= wordsOnScreen; i++) {
 		//Updates to new location
 		gameWords[i].row = gameWords[i].row + secsPast;
+
+		mvprintw(ROWS + 3, 0, "TEST: %d", gameWords[i].row);
 
 		//Printing of word
 		mvprintw(gameWords[i].row, gameWords[i].col, "%s", gameWords[i].word);
