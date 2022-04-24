@@ -221,10 +221,11 @@ int game() {
 	/* Variables for the game */
 	int score = 0; //Score, stored in seconds
 	int numWordsOnScreen = 0; //Number of words on screen
+	int timeTaken = 0; //Time taken to enter a word
 	char userWord[WORDLENGTH]; //Word typed
 	/* End variables for the game */
 
-	//newPrintToScreen("test", &numWordsOnScreen);
+	timeTaken = 2;
 
 	do {
 		//Gets a random num for random word
@@ -243,7 +244,7 @@ int game() {
 		getstr(userWord);
 
 		//TODO: ERROR, ONLY MOVES IT DOWN ONCE THEN DELETES THE WORD
-		updateLoc(2, numWordsOnScreen);
+		updateLoc(timeTaken, numWordsOnScreen);
 
 		//getuser input with getstr, keep track of time it takes
 		//update location of word(s), add new words if needed with newPrintToScreen
@@ -317,8 +318,6 @@ void updateLoc(int secsPast, int wordsOnScreen) {
 	for(int i = 0; i <= wordsOnScreen; i++) {
 		//Updates to new location
 		gameWords[i].row = gameWords[i].row + secsPast;
-
-		mvprintw(ROWS + 3, 0, "TEST: %d", gameWords[i].row);
 
 		//Printing of word
 		mvprintw(gameWords[i].row, gameWords[i].col, "%s", gameWords[i].word);
