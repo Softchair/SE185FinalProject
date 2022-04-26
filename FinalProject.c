@@ -31,7 +31,7 @@ Team member 4 Camden Fergen | "90%"
 int game();
 
 /* Prints a word to the screen if it hasnt been printed before */
-void newPrintToScreen(char* word, int* wordsOnScreen, int newRow);
+void newPrintToScreen(int* wordsOnScreen, int numNewWords);
 
 /* Updates the location of words on the screen 
    Also increments them all down by num seconds
@@ -223,15 +223,7 @@ int game() {
 
 	/* Setup game before while loo */
 
-	//Gets a random num for random word
-	int randNum = rand() % numGameWords;
-		
-	//Variable to hold the newWord to be added
-	char newWord[WORDLENGTH];
-
-	//Copies the random word to newWord, then prints it
-	strcpy(newWord, wordsToUse[randNum]);
-	newPrintToScreen(newWord, &numWordsOnScreen, 1);
+	newPrintToScreen(&numWordsOnScreen, 1);
 
 	do {
 		timeTaken = 0;
@@ -251,20 +243,8 @@ int game() {
 		timeTaken = secondsAfter - secondsBefore;
 
 		updateLoc(timeTaken, numWordsOnScreen);
-		
-		for(int i = 0; i < timeTaken; i++) {
-			//Gets a random num for random word
-			int randNum = rand() % numGameWords;
-		
-			//Variable to hold the newWord to be added
-			char newWord[WORDLENGTH];
 
-			//Copies the random word to newWord, then prints it
-			strcpy(newWord, wordsToUse[randNum]);
-			newPrintToScreen(newWord, &numWordsOnScreen, (timeTaken - i));
-
-			//gameWords[numWordsOnScreen].row = gameWords[numWordsOnScreen].row + (timeTaken - i);
-		}
+		newPrintToScreen(&numWordsOnScreen, timeTaken);
 
 		for(int i = 0; i < numWordsOnScreen; i++) {
 			mvprintw(ROWS + 3 + i, 0, "%d/%d: %s", i, numWordsOnScreen, gameWords[i].word);
@@ -283,30 +263,44 @@ int game() {
 }
 
 /* Prints a word to the screen if it hasnt been printed before */
-void newPrintToScreen(char* word, int* wordsOnScreen, int newRow) {
+void newPrintToScreen(int* wordsOnScreen, int numNewWords) {
 	wordStruct tempWord;
 	srand(time(NULL));
 
-	int length = strlen(word);
-	int col = (rand() % COLUMNS) + 1;
+	for(int i = 0; i < numNewWords; i++) {
 
-	//Makes sure that the words are printed within the walls of the board
-	if(col + length >= COLUMNS){
-		col -= length+1;
+		//Gets a random num for random word
+		int randNum = rand() % numGameWords;
+		
+		//Variable to hold the newWord to be added
+		char newWord[WORDLENGTH];
+
+		//Copies the random word to newWord, then prints it
+		strcpy(newWord, wordsToUse[randNum]);
+
+
+		int length = strlen(newWord);
+		int col = (rand() % COLUMNS) + 1;
+		int row = numNewWords - i;
+
+		//Makes sure that the words are printed within the walls of the board
+		if(col + length >= COLUMNS){
+			col -= length + 1;
+		}
+
+		mvprintw(row, col, "%s", newWord);
+
+		//Initialize word struct
+		strncpy(tempWord.word, newWord, 20);
+		tempWord.col = col;
+		tempWord.row = row;
+
+		//Adds the struct to array of words on screen
+		int val = *wordsOnScreen;
+		gameWords[val] = tempWord;
+
+		*wordsOnScreen = *wordsOnScreen + 1;
 	}
-
-	mvprintw(1, col, "%s", word);
-
-	//Initialize word struct
-	strncpy(tempWord.word, word, 20);
-	tempWord.col = col;
-	tempWord.row = newRow;
-
-	//Adds the struct to array of words on screen
-	int val = *wordsOnScreen;
-	gameWords[val] = tempWord;
-
-	*wordsOnScreen = *wordsOnScreen + 1;
 }
 
 /* Updates the location of words on the screen 
