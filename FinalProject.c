@@ -67,6 +67,7 @@ void drawBoard(void);
    the BOARD[][] variable */
 void generateBoard();
 
+
 /* End function initialization */
 /////////////////////////////////
 
@@ -94,13 +95,8 @@ wordStruct gameWords[30];
 int numWords = 0; //For total words
 int numGameWords = 0; //For words that can be used
 
-/*Variable holds the time when the game starts*/
 time_t begin;
-
-/*Variable holds the time when the game ends*/
 time_t end;
-
-int timeSpent;
 
 /* End global variables */
 /////////////////////////////////
@@ -190,10 +186,10 @@ int main() {
 		return 0;
 	}
 
-	
+	int score = game();
 	end = time(NULL);
-	timeSpent = (double)(end - begin) / CLOCKS_PER_SEC;
-	printf("You made it %d seconds! Congrats", (timeSpent));
+	int finalTime = end - begin;
+	printf("You made it %d seconds! Congrats", finalTime);
 
 	//Cleanup board
 	endwin();
@@ -250,6 +246,7 @@ int game() {
 		updateLoc(timeTaken, numWordsOnScreen);
 
 		//TODO
+		//Keep track of time it takes for user to enter word
 		//move words down the x amount
 		//generate x words dependent on how many seconds passed
 
@@ -343,6 +340,11 @@ void clearTypingSpace() {
 /* Misc functions */
 ////////////////////
 
+/*This function converts milliseconds into seconds*/
+int milToSeconds(int t) {
+	int sec = (t-((t/1000)/60*60))/1000;
+	return sec;
+}
 
 /* Iterates over a file to read all the words from
    it and then returns the num of words in file */
