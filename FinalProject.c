@@ -38,8 +38,8 @@ void newPrintToScreen(char* word, int* wordsOnScreen);
    passed since last call */
 void updateLoc(int secsPast, int wordsOnScreen);
 
-/*removes a word from the screen */
-void removeWord(int arrayLoc);
+/* Removes a word from the screen */
+void removeWord(char userWord[], int wordsOnScreen);
 
 /* Finds the lowest word and returns an int */
 int lowestWord(int wordsOnScreen);
@@ -243,6 +243,8 @@ int game() {
 		mvprintw(ROWS + 2, 0, "Type here: ");
 		getstr(userWord);
 
+		removeWord(userWord, numWordsOnScreen);
+
 		updateLoc(timeTaken, numWordsOnScreen);
 
 		//TODO
@@ -291,6 +293,12 @@ void updateLoc(int secsPast, int wordsOnScreen) {
 	drawBoard();
 
 	for(int i = 0; i < wordsOnScreen; i++) {
+
+		//Passes over removed words
+		if(strcmp(gameWords[i].word, "NULL") == 0) {
+			continue;
+		}
+
 		//Updates to new location
 		gameWords[i].row = gameWords[i].row + secsPast;
 		
@@ -303,12 +311,22 @@ void updateLoc(int secsPast, int wordsOnScreen) {
 }
 
 /* Removes a word from the screen */
-//TODO
-void removeWord(int arrayLoc) {
-	char word[];
-	scanf("%s", word);
-	if(strcmp(word, ) ==0){
-		//removes the word 
+void removeWord(char userWord[], int wordsOnScreen) {
+	//Iterates over the array of words on screen
+	for (int i = 0; i < wordsOnScreen; i++) {
+
+		//If the user word is found
+		if(strcmp(userWord, gameWords[i].word) == 0) {
+
+			//Iterates over the location of the user word, removing it
+			for(int j = 0; j < strlen(userWord); j++) {
+				mvprintw(gameWords[i].row, gameWords[i].col + j, " ");;
+				refresh();
+			}
+
+			//Copies NULL into the word that was removed
+			strncpy(gameWords[i].word, "NULL", 20);
+		}
 	}
 }
 
