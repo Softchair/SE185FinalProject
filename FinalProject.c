@@ -303,8 +303,13 @@ void updateLoc(int secsPast, int wordsOnScreen) {
 }
 
 /* Removes a word from the screen */
+//TODO
 void removeWord(int arrayLoc) {
-	
+	char word[];
+	scanf("%s", word);
+	if(strcmp(word, ) ==0){
+		//removes the word 
+	}
 }
 
 /* Finds the lowest word and returns an int */
@@ -340,11 +345,6 @@ void clearTypingSpace() {
 /* Misc functions */
 ////////////////////
 
-/*This function converts milliseconds into seconds*/
-int milToSeconds(int t) {
-	int sec = (t-((t/1000)/60*60))/1000;
-	return sec;
-}
 
 /* Iterates over a file to read all the words from
    it and then returns the num of words in file */
