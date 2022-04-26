@@ -31,7 +31,7 @@ Team member 4 Camden Fergen | "90%"
 int game();
 
 /* Prints a word to the screen if it hasnt been printed before */
-void newPrintToScreen(char* word, int* wordsOnScreen);
+void newPrintToScreen(char* word, int* wordsOnScreen, int newRow);
 
 /* Updates the location of words on the screen 
    Also increments them all down by num seconds
@@ -180,16 +180,12 @@ int main() {
 
 		//Uses readWords function to populate words for game
 		numGameWords = readWords(wordsFile, minWordLen);
-		begin = time(NULL);
-
 	} else {
 		return 0;
 	}
 
 	int score = game();
-	end = time(NULL);
-	int finalTime = end - begin;
-	printf("You made it %d seconds! Congrats", finalTime);
+	printf("You made it %d seconds! Congrats", score);
 
 	//Cleanup board
 	endwin();
@@ -235,7 +231,7 @@ int game() {
 
 	//Copies the random word to newWord, then prints it
 	strcpy(newWord, wordsToUse[randNum]);
-	newPrintToScreen(newWord, &numWordsOnScreen);
+	newPrintToScreen(newWord, &numWordsOnScreen, 1);
 
 	do {
 		timeTaken = 0;
@@ -265,9 +261,9 @@ int game() {
 
 			//Copies the random word to newWord, then prints it
 			strcpy(newWord, wordsToUse[randNum]);
-			newPrintToScreen(newWord, &numWordsOnScreen);
+			newPrintToScreen(newWord, &numWordsOnScreen, (timeTaken - i));
 
-			gameWords[numWordsOnScreen].row = gameWords[numWordsOnScreen].row + (timeTaken - i);
+			//gameWords[numWordsOnScreen].row = gameWords[numWordsOnScreen].row + (timeTaken - i);
 		}
 
 		for(int i = 0; i < numWordsOnScreen; i++) {
@@ -285,7 +281,7 @@ int game() {
 }
 
 /* Prints a word to the screen if it hasnt been printed before */
-void newPrintToScreen(char* word, int* wordsOnScreen) {
+void newPrintToScreen(char* word, int* wordsOnScreen, int newRow) {
 	wordStruct tempWord;
 	srand(time(NULL));
 
@@ -302,7 +298,7 @@ void newPrintToScreen(char* word, int* wordsOnScreen) {
 	//Initialize word struct
 	strncpy(tempWord.word, word, 20);
 	tempWord.col = col;
-	tempWord.row = 1;
+	tempWord.row = newRow;
 
 	//Adds the struct to array of words on screen
 	int val = *wordsOnScreen;
