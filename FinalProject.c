@@ -344,11 +344,6 @@ void clearTypingSpace() {
 /* Misc functions */
 ////////////////////
 
-/*This function converts milliseconds into seconds*/
-int milToSeconds(int t) {
-	int sec = (t-((t/1000)/60*60))/1000;
-	return sec;
-}
 
 /* Iterates over a file to read all the words from
    it and then returns the num of words in file */
