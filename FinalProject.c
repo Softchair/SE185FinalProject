@@ -97,6 +97,12 @@ wordStruct gameWords[30];
 int numWords = 0; //For total words
 int numGameWords = 0; //For words that can be used
 
+/*Variable holds the time when the game starts*/
+time_t begin;
+
+/*Variable holds the time when the game ends*/
+time_t end;
+
 /* End global variables */
 /////////////////////////////////
 
@@ -179,14 +185,15 @@ int main() {
 
 		//Uses readWords function to popualte words for game
 		numGameWords = readWords(wordsFile, minWordLen);
+		begin = time(NULL);
 
 	} else {
 		return 0;
 	}
 
-	int score = game();
-
-	printf("You made it %d seconds! Congrats", score);
+	
+	end = time(NULL);
+	printf("You made it %d seconds! Congrats", (end-begin));
 
 	//Cleanup board
 	endwin();
