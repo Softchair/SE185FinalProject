@@ -1,7 +1,7 @@
 /* 
 Team member 1 Kaden Wingert | "30%"
 Team member 2 Daniel Karpov | "Percentage of Contribution to The Project"
-Team member 3 Ethan Mayer 	| "Percentage of Contribution to The Project"
+Team member 3 Ethan Mayer 	| "100000000%"
 Team member 4 Camden Fergen | "90%"
 */
 
