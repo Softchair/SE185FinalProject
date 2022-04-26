@@ -274,6 +274,8 @@ int game() {
 		//move words down the x amount
 		//generate x words dependent on how many seconds passed
 
+		score += timeTaken;
+
 	} while(lowestWord(numWordsOnScreen) < ROWS);
 
 	endwin();
