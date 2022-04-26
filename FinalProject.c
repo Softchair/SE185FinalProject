@@ -1,6 +1,6 @@
 /* 
 Team member 1 Kaden Wingert | "30%"
-Team member 2 Daniel Karpov | "Percentage of Contribution to The Project"
+Team member 2 Daniel Karpov | "6969%"
 Team member 3 Ethan Mayer 	| "100000000%"
 Team member 4 Camden Fergen | "90%"
 */
@@ -246,9 +246,7 @@ int game() {
 
 		newPrintToScreen(&numWordsOnScreen, timeTaken);
 
-		for(int i = 0; i < numWordsOnScreen; i++) {
-			mvprintw(ROWS + 3 + i, 0, "%d/%d: %s", i, numWordsOnScreen, gameWords[i].word);
-		}
+		
 
 		//TODO
 		//move words down the x amount
