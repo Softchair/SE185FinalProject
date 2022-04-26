@@ -100,6 +100,8 @@ time_t begin;
 /*Variable holds the time when the game ends*/
 time_t end;
 
+int timeSpent;
+
 /* End global variables */
 /////////////////////////////////
 
@@ -190,7 +192,8 @@ int main() {
 
 	
 	end = time(NULL);
-	printf("You made it %d seconds! Congrats", (end-begin));
+	timeSpent = (double)(end - begin) / CLOCKS_PER_SEC;
+	printf("You made it %d seconds! Congrats", (timeSpent));
 
 	//Cleanup board
 	endwin();
