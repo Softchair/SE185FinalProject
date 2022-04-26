@@ -1,7 +1,7 @@
 /* 
 Team member 1 Kaden Wingert | "30%"
 Team member 2 Daniel Karpov | "Percentage of Contribution to The Project"
-Team member 3 Ethan Meyer 	| "Percentage of Contribution to The Project"
+Team member 3 Ethan Mayer 	| "Percentage of Contribution to The Project"
 Team member 4 Camden Fergen | "90%"
 */
 
@@ -178,7 +178,7 @@ int main() {
 		printf("What would you like you minimum word length to be? ");
 		scanf("%d", &minWordLen);
 
-		//Uses readWords function to popualte words for game
+		//Uses readWords function to populate words for game
 		numGameWords = readWords(wordsFile, minWordLen);
 		begin = time(NULL);
 
