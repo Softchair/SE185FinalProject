@@ -89,7 +89,7 @@ char BOARD[ROWS][COLUMNS];
 char wordsToUse[2000][WORDLENGTH];
 
 /* Variable of words on screen */
-wordStruct gameWords[30];
+wordStruct gameWords[100];
 
 /* Variable to hold number of words */
 int numWords = 0; //For total words
@@ -225,34 +225,54 @@ int game() {
 	char userWord[WORDLENGTH]; //Word typed
 	/* End variables for the game */
 
-	timeTaken = 2;
+	/* Setup game before while loo */
+
+	//Gets a random num for random word
+	int randNum = rand() % numGameWords;
+		
+	//Variable to hold the newWord to be added
+	char newWord[WORDLENGTH];
+
+	//Copies the random word to newWord, then prints it
+	strcpy(newWord, wordsToUse[randNum]);
+	newPrintToScreen(newWord, &numWordsOnScreen);
 
 	do {
-		//Gets a random num for random word
-		int randNum = rand() % numGameWords;
-		
-		//Variable to hold the newWord to be added
-		char newWord[WORDLENGTH];
-
-		//Copies the random word to newWord, then prints it
-		strcpy(newWord, wordsToUse[randNum]);
-		newPrintToScreen(newWord, &numWordsOnScreen);
+		timeTaken = 0;
 
 		//Clears the typing space, then gets user input
 		clearTypingSpace();
 		mvprintw(ROWS + 2, 0, "Type here: ");
 
-		//find time before
+		time_t secondsBefore = time(NULL);
+		time_t secondsAfter;
 
 		getstr(userWord);
 
-		//find time after
-
+		secondsAfter = time(NULL);
 
 		removeWord(userWord, numWordsOnScreen);
-
+		timeTaken = secondsAfter - secondsBefore;
 
 		updateLoc(timeTaken, numWordsOnScreen);
+		
+		for(int i = 0; i < timeTaken; i++) {
+			//Gets a random num for random word
+			int randNum = rand() % numGameWords;
+		
+			//Variable to hold the newWord to be added
+			char newWord[WORDLENGTH];
+
+			//Copies the random word to newWord, then prints it
+			strcpy(newWord, wordsToUse[randNum]);
+			newPrintToScreen(newWord, &numWordsOnScreen);
+
+			gameWords[numWordsOnScreen].row = gameWords[numWordsOnScreen].row + (timeTaken - i);
+		}
+
+		for(int i = 0; i < numWordsOnScreen; i++) {
+			mvprintw(ROWS + 3 + i, 0, "%d/%d: %s", i, numWordsOnScreen, gameWords[i].word);
+		}
 
 		//TODO
 		//move words down the x amount
