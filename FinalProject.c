@@ -67,9 +67,6 @@ void drawBoard(void);
    the BOARD[][] variable */
 void generateBoard();
 
-/*This function converts milliseconds into seconds*/
-int milToSeconds(int t);
-
 /* End function initialization */
 /////////////////////////////////
 
@@ -250,7 +247,6 @@ int game() {
 		updateLoc(timeTaken, numWordsOnScreen);
 
 		//TODO
-		//Keep track of time it takes for user to enter word
 		//move words down the x amount
 		//generate x words dependent on how many seconds passed
 
