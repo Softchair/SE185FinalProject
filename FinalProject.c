@@ -241,14 +241,20 @@ int game() {
 		//Clears the typing space, then gets user input
 		clearTypingSpace();
 		mvprintw(ROWS + 2, 0, "Type here: ");
+
+		//find time before
+
 		getstr(userWord);
 
+		//find time after
+
+
 		removeWord(userWord, numWordsOnScreen);
+
 
 		updateLoc(timeTaken, numWordsOnScreen);
 
 		//TODO
-		//Keep track of time it takes for user to enter word
 		//move words down the x amount
 		//generate x words dependent on how many seconds passed
 
