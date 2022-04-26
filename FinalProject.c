@@ -246,10 +246,6 @@ int game() {
 
 		newPrintToScreen(&numWordsOnScreen, timeTaken);
 
-		for(int i = 0; i < numWordsOnScreen; i++) {
-			mvprintw(ROWS + 3 + i, 0, "%d/%d: %s", i, numWordsOnScreen, gameWords[i].word);
-		}
-
 		//TODO
 		//move words down the x amount
 		//generate x words dependent on how many seconds passed
